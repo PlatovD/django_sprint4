@@ -1,0 +1,2 @@
+class BlankCategoryError(Exception):
+    pass

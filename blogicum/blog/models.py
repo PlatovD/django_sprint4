@@ -1,7 +1,7 @@
 # Create your models here.
 from django.contrib.auth import get_user_model
+from django.contrib.auth.models import AbstractUser
 from django.db import models
-from django.db.models import CASCADE
 
 User = get_user_model()
 
@@ -97,7 +97,7 @@ class Post(BaseModel):
     class Meta:
         verbose_name = 'публикация'
         verbose_name_plural = 'Публикации'
-        ordering = ('pub_date',)
+        ordering = ('-pub_date',)
 
     def __str__(self):
         return self.title

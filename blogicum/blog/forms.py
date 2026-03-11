@@ -1,10 +1,14 @@
 from datetime import timedelta
 
 from django import forms
+from django.contrib.auth import get_user_model
+from django.contrib.auth.forms import UserCreationForm
 from django.core.exceptions import ValidationError
 from django.utils import timezone
 
 from blog.models import Post, Comment
+
+User = get_user_model()
 
 
 class PostForm(forms.ModelForm):
@@ -18,17 +22,14 @@ class PostForm(forms.ModelForm):
         model = Post
         fields = ('title', 'text', 'pub_date', 'location', 'category', 'image', 'is_published')
 
-    def clean_pub_date(self):
-        date = self.cleaned_data['pub_date']
-        if not date:
-            self.cleaned_data['pub_date'] = timezone.now()
-            date = self.cleaned_data['pub_date']
-        elif date < timezone.now() - timedelta(minutes=5):
-            raise ValidationError('Publication date can not be in past')
-        return date
-
 
 class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
         fields = ('text',)
+
+
+class CustomUserCreationForm(UserCreationForm):
+    class Meta(UserCreationForm.Meta):
+        model = User
+        fields = ('username', 'first_name', 'last_name', 'password1', 'password2')

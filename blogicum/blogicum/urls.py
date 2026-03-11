@@ -15,13 +15,20 @@ Including another URLconf
 """
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.urls import path, include
+from django.contrib.auth.forms import UserCreationForm
+from django.urls import path, include, reverse_lazy
 
-from blogicum import settings
+from django.conf import settings
+from django.views.generic import CreateView
 
 urlpatterns = [
     path('', include('blog.urls', namespace='blog')),
-    path('', include('users.urls')),
+    path('auth/', include('django.contrib.auth.urls')),
+    path('auth/registration/', CreateView.as_view(
+        template_name='registration/registration_form.html',
+        form_class=UserCreationForm,
+        success_url=reverse_lazy('blog:index')
+    ), name='registration'),
     path('pages/', include('pages.urls', namespace='pages')),
     path('admin/', admin.site.urls),
 ]
@@ -31,6 +38,6 @@ if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 # templates for exception handling
-handler403 = 'core.views.csrf_verification_failed'
-handler404 = 'core.views.page_not_found'
-handler500 = 'core.views.internal_server_error'
+handler403 = 'pages.views.csrf_verification_failed'
+handler404 = 'pages.views.page_not_found'
+handler500 = 'pages.views.internal_server_error'

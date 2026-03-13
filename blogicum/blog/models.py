@@ -1,7 +1,8 @@
-# Create your models here.
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+
+from blog.managers import PostManager
 
 User = get_user_model()
 
@@ -14,6 +15,7 @@ class BaseModel(models.Model):
     created_at = models.DateTimeField(
         auto_now_add=True, verbose_name='Добавлено'
     )
+    objects = models.Manager()
 
     class Meta:
         abstract = True
@@ -94,6 +96,11 @@ class Post(BaseModel):
         upload_to='blog_images'
     )
 
+    custom_manager = PostManager()
+
+    def get_post_with_all_data(self):
+        return
+
     class Meta:
         verbose_name = 'публикация'
         verbose_name_plural = 'Публикации'
@@ -132,4 +139,5 @@ class Comment(BaseModel):
         ordering = ('created_at',)
 
     def __str__(self):
-        return
+        # в принципе если проект небольшой то сильно не нагрузит админку
+        return f'{"".join(self.text.split()[:3])}... - {self.author.username}'

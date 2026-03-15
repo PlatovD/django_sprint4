@@ -36,6 +36,9 @@ urlpatterns = [
 # debug media management
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    # import debug_toolbar
+    #
+    # urlpatterns += (path('__debug__/', include(debug_toolbar.urls)),)
 
 # templates for exception handling
 handler403 = 'pages.views.csrf_verification_failed'

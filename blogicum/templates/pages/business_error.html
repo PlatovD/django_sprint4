@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block title %}Ошибка бизнес-логики{% endblock %}
+
+{% block content %}
+    <h1>Ошибка операции</h1>
+
+    {% if error_message %}
+        <p class="business-error-message">{{ error_message }}</p>
+    {% else %}
+        <p>При выполнении операции произошла ошибка бизнес-логики</p>
+    {% endif %}
+
+    {% if error_code %}
+        <p class="business-error-code">Код ошибки: {{ error_code }}</p>
+    {% endif %}
+
+    <a href="{% url 'blog:index' %}" class="btn btn-primary">Вернуться на главную</a>
+{% endblock %}

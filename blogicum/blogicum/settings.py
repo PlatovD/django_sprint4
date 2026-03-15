@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-u$v*@bd0srz_nu#b&b1oh7o$avz@4fr9+ekrke66yd-2kn51sv
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '90.156.170.132']
 
 # Application definition
 
@@ -59,6 +59,7 @@ ROOT_URLCONF = 'blogicum.urls'
 STATICFILES_DIRS = [
     BASE_DIR / 'static_dev',
 ]
+STATIC_ROOT = BASE_DIR / 'static'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -86,7 +87,7 @@ WSGI_APPLICATION = 'blogicum.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': '/app/data/db.sqlite3',
     }
 }
 
@@ -117,7 +118,7 @@ TIME_ZONE = 'Europe/Moscow'
 
 USE_I18N = True
 
-USE_L10N = True
+USE_L10N = False
 
 USE_TZ = True
 
@@ -139,7 +140,7 @@ LOGIN_REDIRECT_URL = 'blog:index'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # email configuration
-EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 EMAIL_FILE_PATH = BASE_DIR / 'sent_emails'
 # DEBUG_TOOLBAR_CONFIG = {
 #     'RESULTS_CACHE_SIZE': 10,

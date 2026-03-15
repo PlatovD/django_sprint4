@@ -17,6 +17,7 @@ class GlobalExceptionMiddleware:
         return self.get_response(request)
 
     def process_exception(self, request, exception):
+        print(str(exception))
         for h in self.handlers:
             if h.supports(exception):
                 return h.handle(request, exception)

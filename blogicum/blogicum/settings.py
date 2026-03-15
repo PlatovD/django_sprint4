@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 
 from pathlib import Path
 
+from debug_toolbar.middleware import show_toolbar
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -38,6 +40,7 @@ INSTALLED_APPS = [
     'django_bootstrap5',
     'blog.apps.BlogConfig',
     'pages.apps.PagesConfig',
+    # 'debug_toolbar',
 ]
 
 MIDDLEWARE = [
@@ -48,6 +51,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'blog.middleware.GlobalExceptionMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
 ROOT_URLCONF = 'blogicum.urls'
@@ -118,9 +123,9 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
-TEMPLATES_DIR = BASE_DIR / 'templates'
-
 STATIC_URL = '/static/'
+
+TEMPLATES_DIR = BASE_DIR / 'templates'
 
 # media files settings
 MEDIA_ROOT = BASE_DIR / 'media'
@@ -136,3 +141,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # email configuration
 EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
 EMAIL_FILE_PATH = BASE_DIR / 'sent_emails'
+# DEBUG_TOOLBAR_CONFIG = {
+#     'RESULTS_CACHE_SIZE': 10,
+#     'SHOW_TOOLBAR_CALLBACK': lambda request: True,
+#     'INSERT_BEFORE': '</body>',
+#     'INTERCEPT_REDIRECTS': False,
+# }

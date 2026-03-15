@@ -9,7 +9,8 @@ class PostMethodsMixin:
         return self.annotate(comment_count=Coalesce(Count("comments"), 0))
 
     def published(self) -> 'PostQueryset':
-        return self.filter(pub_date__lte=timezone.now(), is_published__exact=True)
+        return self.select_related('category').filter(pub_date__lte=timezone.now(), is_published__exact=True,
+                                                      category__is_published__exact=True)
 
 
 class PostQueryset(models.QuerySet, PostMethodsMixin):

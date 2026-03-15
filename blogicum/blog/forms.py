@@ -4,6 +4,7 @@ from django.contrib.auth.forms import UserCreationForm
 
 from blog.models import Post, Comment
 
+MAX_PAST_MINUTES = 5
 User = get_user_model()
 
 

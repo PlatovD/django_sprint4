@@ -10,6 +10,7 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 from blog.forms import PostForm, CommentForm, CustomUserCreationForm
 from blog.models import Post, Comment
 from blog.services import PostService, CategoryService, CommentService, UserService
+from blog.utils import OptimizedPaginator
 
 User = get_user_model()
 
@@ -21,6 +22,17 @@ class IndexView(ListView):
 
     def get_queryset(self):
         return PostService.get_published_posts()
+
+    def get_paginator(self, queryset, per_page, orphans=0,
+                      allow_empty_first_page=True, **kwargs):
+        return OptimizedPaginator(
+            queryset,
+            per_page,
+            count_func=PostService.get_published_posts_count,
+            orphans=orphans,
+            allow_empty_first_page=allow_empty_first_page,
+            **kwargs
+        )
 
 
 class PostDetailView(DetailView):
@@ -94,7 +106,18 @@ class CategoryListView(ListView):
         if not category:
             raise Http404('Category was not found')
         self.category = category
-        return category.posts.all()
+        return CategoryService.get_category_posts_with_comments_cnt(category)
+
+    def get_paginator(self, queryset, per_page, orphans=0,
+                      allow_empty_first_page=True, **kwargs):
+        return OptimizedPaginator(
+            queryset,
+            per_page,
+            count_func=PostService.get_published_posts_count_by_category(self.category),
+            orphans=orphans,
+            allow_empty_first_page=allow_empty_first_page,
+            **kwargs
+        )
 
     def get_context_data(self, *, object_list: list[Post] = None, **kwargs):
         context = super().get_context_data(object_list=object_list, **kwargs)
@@ -177,11 +200,14 @@ class UserProfileView(DetailView):
             raise Http404('Profile not found')
         return profile
 
+    def get_paginator_custom(self, queryset, per_page, user, requested_user, **kwargs) -> Paginator:
+        return UserService.get_custom_paginator(queryset, per_page, user, requested_user, **kwargs)
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         profile = self.object
         posts = profile.posts.all()
-        paginator = Paginator(posts, 10)
+        paginator = self.get_paginator_custom(posts, 10, profile, self.request.user)
         page_number = self.request.GET.get('page')
         page_obj = paginator.get_page(page_number)
         context.update({

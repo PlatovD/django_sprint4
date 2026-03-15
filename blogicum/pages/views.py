@@ -1,6 +1,8 @@
 from django.shortcuts import render
 from django.views.generic import TemplateView
 
+from blog.exceptions import BusinessError
+
 
 class AboutView(TemplateView):
     template_name = 'pages/about.html'
@@ -20,3 +22,8 @@ def csrf_verification_failed(request, exception):
 
 def internal_server_error(request):
     return render(request, 'pages/500.html', status=500)
+
+
+class TestError(TemplateView):
+    def render_to_response(self, context, **response_kwargs):
+        raise BusinessError("Тестовая ошибка")
